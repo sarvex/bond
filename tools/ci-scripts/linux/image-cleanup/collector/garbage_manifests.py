@@ -26,12 +26,7 @@ def find_garbage_manifests(
     _LOGGER.debug('Keeping images newer than %s', keep_newer_than_time)
 
     for manifest in image_manifests:
-        # It would probably be faster to check timestamps before tags, but
-        # the tags are more important of a reason to keep an image, so we
-        # check tags first so that the tag reference gets logged instead of
-        # the newness.
-        matching_tags = manifest.tags.intersection(active_tags)
-        if matching_tags:
+        if matching_tags := manifest.tags.intersection(active_tags):
             _LOGGER.info('%s: keep - referenced {%s}', manifest.digest, ','.join(matching_tags))
             continue
 

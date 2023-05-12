@@ -81,7 +81,7 @@ GitHub Actions for all the commits specified by the given `roots`.
             # that we have at least the first three parts and call it
             # good enough.
             if len(parts) < 3:
-                raise ValueError('Cannot parse ls-tree output: "{}"'.format(line))
+                raise ValueError(f'Cannot parse ls-tree output: "{line}"')
 
             obj_type = parts[1]
             blob_id = _BlobId(parts[2])

@@ -9,7 +9,7 @@ def person(first, last, eyes):
     obj.last_name = last
     obj.eyes = eyes
     m = hashlib.md5()
-    m.update('{}::{}::{}'.format(first, last, eyes).encode('utf8'))
+    m.update(f'{first}::{last}::{eyes}'.encode('utf8'))
     obj.hash = m.digest()
     return obj
 

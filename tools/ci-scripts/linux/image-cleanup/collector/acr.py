@@ -31,7 +31,7 @@ class ImageManifest: # pylint: disable=too-few-public-methods
     @staticmethod
     def _parse_manifest_timestamp(timestamp: str) -> datetime:
         if not timestamp.endswith('Z'):
-            msg = 'Can only parse UTC timestamps (that end with Z), but go {}'.format(timestamp)
+            msg = f'Can only parse UTC timestamps (that end with Z), but go {timestamp}'
             raise ValueError(msg)
 
         # ACR timestamps sometimes have fractional seconds. There's no RFC
@@ -39,7 +39,7 @@ class ImageManifest: # pylint: disable=too-few-public-methods
         # much precision, so we just strip the fractional seconds.
         dot_loc = timestamp.rfind('.')
         if dot_loc != -1:
-            timestamp = timestamp[0:dot_loc] + 'Z'
+            timestamp = f'{timestamp[:dot_loc]}Z'
 
         return datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
@@ -93,7 +93,7 @@ def get_image_manifests() -> Iterable[ImageManifest]:
 
 def delete_image_by_manifest(manifest: ImageManifest) -> None:
     """Delete an ACR image (and all its tags)."""
-    image_name = '{}@{}'.format(REPOSITORY_NAME, manifest.digest)
+    image_name = f'{REPOSITORY_NAME}@{manifest.digest}'
     az_delete_cmd_line = ['az', 'acr', 'repository', 'delete',
                           '--name', REGISTRY_NAME,
                           '--image', image_name,

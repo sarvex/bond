@@ -35,10 +35,7 @@ random_uint32 = functools.partial(random_uint, 32)
 random_uint64 = functools.partial(random_uint, 64)
 
 def random_list(random_element):
-    l = []
-    for i in range(0, random.randint(1, 7)):
-        l.append(random_element())
-    return l
+    return [random_element() for _ in range(0, random.randint(1, 7))]
 
 def random_set(random_element):
     return set(random_list(random_element))
@@ -191,7 +188,7 @@ class BondTest(unittest.TestCase):
 
     def serialization(self, obj, init):
         obj_type = type(obj)
-        for i in range(0, 50):
+        for _ in range(0, 50):
             init(obj)
             new_obj = obj_type()
             self.assertFalse(obj == new_obj)
@@ -200,7 +197,7 @@ class BondTest(unittest.TestCase):
 
     def marshaling(self, obj, init):
         obj_type = type(obj)
-        for i in range(0, 50):
+        for _ in range(0, 50):
             init(obj)
             new_obj = obj_type()
             self.assertFalse(obj == new_obj)
@@ -217,13 +214,13 @@ class BondTest(unittest.TestCase):
         self.assertTrue(len(a)==len(b) and all(a[i] == b[i] for i in range(0, len(a))))
         a.extend(b)
         self.assertTrue(all(a[i] == a[i+len(a)//2] for i in range(0, len(a)//2)))
-        del a[0:len(b)]
+        del a[:len(b)]
         self.assertTrue(len(a)==len(b) and all(a[i] == b[i] for i in range(0, len(a))))
         self.assertEqual(len(a), len(b))
         a[:] = [b[0]]*len(a)
         self.assertEqual(len(a), len(b))
         self.assertTrue(all(a[i] == b[0] for i in range(0, len(a))))
-        a[0:len(a)//2] = b[0]
+        a[:len(a)//2] = b[0]
         self.assertEqual(a[0], b[0])
         x = a[-1]
         del a[:-1]

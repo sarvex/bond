@@ -57,12 +57,12 @@ def main() -> None:
 
     numeric_level = getattr(logging, args.verbosity.upper(), None)
     if not isinstance(numeric_level, int):
-        raise ValueError('Invalid --verbosity level: {}'.format(args.verbosity))
+        raise ValueError(f'Invalid --verbosity level: {args.verbosity}')
 
     logging.basicConfig(level=numeric_level)
 
     if args.min_age < 0:
-        raise ValueError('--min-age must be non-negative, but got {}'.format(args.min_age))
+        raise ValueError(f'--min-age must be non-negative, but got {args.min_age}')
 
     min_age_before_gc = timedelta(days=args.min_age)
 
@@ -76,10 +76,10 @@ def main() -> None:
 
         for manifest in find_garbage_manifests(min_age_before_gc, active_tags, manifests):
             if args.dry_run:
-                print('{}: would delete'.format(manifest.digest))
+                print(f'{manifest.digest}: would delete')
             else:
                 delete_image_by_manifest(manifest)
-                print('{}: deleted'.format(manifest.digest))
+                print(f'{manifest.digest}: deleted')
 
     except subprocess.CalledProcessError as cpe:
         print('Subprocess {} failed with exit code {}'.format(

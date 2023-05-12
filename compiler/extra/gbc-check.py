@@ -12,13 +12,12 @@ import subprocess
 import shutil
 
 def get_bond_files(base_dir):
-    bond_files = []
-
     os.chdir(base_dir)
-    for file in glob.glob("**/*.bond", recursive=True):
-        bond_files.append(os.path.join(base_dir, file))
-
-    print("INFO Found {} bond files.".format(len(bond_files)))
+    bond_files = [
+        os.path.join(base_dir, file)
+        for file in glob.glob("**/*.bond", recursive=True)
+    ]
+    print(f"INFO Found {len(bond_files)} bond files.")
     return bond_files
 
 def generate_bond(gbc, gbc_flags, output_dir, bond_file):
@@ -40,7 +39,9 @@ def compare_gbcs(stable_gbc, updated_gbc, gbc_flags, output_dir, bond_files):
         second_return_code = generate_bond(updated_gbc, gbc_flags, second_dir, bond_file)
 
         if (first_return_code != second_return_code):
-            print("ERROR File {}: on base gbc has {} return code and on updated gbc has {} return code".format(bond_file, first_return_code, second_return_code))
+            print(
+                f"ERROR File {bond_file}: on base gbc has {first_return_code} return code and on updated gbc has {second_return_code} return code"
+            )
             return
 
         list_files_1 = sorted(os.listdir(first_dir))
@@ -50,7 +51,9 @@ def compare_gbcs(stable_gbc, updated_gbc, gbc_flags, output_dir, bond_files):
         file_count_2 = len(list_files_2)
 
         if (file_count_1 != file_count_2):
-            print("ERROR File {}: on base gbc has generated {} files and updated gbc has generated {} files".format(bond_file, file_count_1, file_count_2))
+            print(
+                f"ERROR File {bond_file}: on base gbc has generated {file_count_1} files and updated gbc has generated {file_count_2} files"
+            )
             return
 
         for (a, b) in zip(list_files_1, list_files_2):
@@ -67,7 +70,9 @@ def compare_gbcs(stable_gbc, updated_gbc, gbc_flags, output_dir, bond_files):
                         anyDiffs = True
                         print(line)
                     if anyDiffs:
-                        print("ERROR File {}: has different output on generated file/output {}".format(bond_file, a))
+                        print(
+                            f"ERROR File {bond_file}: has different output on generated file/output {a}"
+                        )
                         print("#########")
 
         shutil.rmtree(first_dir)
